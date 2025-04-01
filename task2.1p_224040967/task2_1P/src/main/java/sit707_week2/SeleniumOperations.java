@@ -40,10 +40,10 @@ public class SeleniumOperations {
 	
 	
 	public static void officeworks_registration_page(String url) {
-		// Step 1: Locate chrome driver folder in the local drive.
+		
 		System.setProperty("webdriver.chrome.driver", "C:\\\\\\\\chromedriver-win64\\\\\\\\chromedriver.exe");
 		
-		// Step 2: Use above chrome driver to open up a chromium browser.
+		
 		System.out.println("Fire up chrome browser.");
 		WebDriver driver = new ChromeDriver();
 		WebDriverWait wait = new WebDriverWait(driver, 30); // seconds
@@ -53,20 +53,18 @@ public class SeleniumOperations {
 		
 		sleep(2);
 	
-		// Load a webpage in chromium browser.
+		
 		driver.get(url);
 		
-		// Fill Officeworks form fields
-		 driver.findElement(By.id("firstname")).sendKeys("johan");
+		
+         driver.findElement(By.id("firstname")).sendKeys("johan");
          driver.findElement(By.id("lastname")).sendKeys("jacob francis");
          driver.findElement(By.id("phoneNumber")).sendKeys("0468395792");
          driver.findElement(By.id("email")).sendKeys("johanj@example.com");
          driver.findElement(By.id("password")).sendKeys("12345");
          driver.findElement(By.id("confirmPassword")).sendKeys("12345");
 
-        // Locate and click "Create account" button
 
-         // Wait and locate "Create Account" button using XPath
          WebElement createAccountBtn = driver.findElement(By.xpath("//button[contains(text(),'Create account')]"));
 
          createAccountBtn.click();
@@ -90,18 +88,17 @@ public class SeleniumOperations {
 	    System.setProperty("webdriver.chrome.driver", "C:\\chromedriver-win64\\chromedriver.exe");
 
 	    WebDriver driver = new ChromeDriver();
-	    WebDriverWait wait = new WebDriverWait(driver, 10); // ✅ Works with Selenium 4+
+	    WebDriverWait wait = new WebDriverWait(driver, 10); 
 
 	    driver.get(url);
 	    System.out.println("Opened GitHub registration page.");
 
 	    try {
-	        // Fill GitHub registration form
+	       
 	        driver.findElement(By.id("email")).sendKeys("biniltomjose12780@example.com");
 	        driver.findElement(By.id("password")).sendKeys("StrongPass@123");
 	        driver.findElement(By.id("login")).sendKeys("sarun1234");
 
-	        // ✅ FIXED: Use the correct wait variable
 	        WebElement continueBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Continue']")));
 	        continueBtn.click();
 
@@ -122,14 +119,14 @@ public class SeleniumOperations {
 	        TakesScreenshot ts = (TakesScreenshot) driver;
 	        File screenshot = ts.getScreenshotAs(OutputType.FILE);
 
-	        // Set the desired folder for saving screenshots
+	
 	        String screenshotDir = "C:\\Users\\binil\\OneDrive\\Pictures\\";
 	        File destination = new File(screenshotDir + fileName);
 
-	        // Ensure the directory exists
+	      
 	        Files.createDirectories(destination.getParentFile().toPath());
 
-	        // Save the file
+	    
 	        Files.copy(screenshot.toPath(), destination.toPath());
 	        System.out.println("Screenshot saved at: " + destination.getAbsolutePath());
 	    } catch (Exception e) {
