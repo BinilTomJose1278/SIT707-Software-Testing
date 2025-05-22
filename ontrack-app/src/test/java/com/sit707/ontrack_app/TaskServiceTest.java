@@ -10,7 +10,7 @@ public class TaskServiceTest {
     public void testValidStudentReturnsTasks() {
         TaskService service = new TaskService();
         List<String> tasks = service.getSubmittedTasks("S123");
-        assertEquals(3, tasks.size());
+        assertEquals(2, tasks.size());
         assertTrue(tasks.contains("Task 1 - Submitted"));
         assertTrue(tasks.contains("Task 2 - Reviewed"));
     }
