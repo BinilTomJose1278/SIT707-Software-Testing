@@ -5,23 +5,23 @@ steps:
   - name: 'python:3.10'
     entrypoint: 'bash'
     args: ['-c', 'pip install -r requirements.txt && pytest']
-    dir: 'expense-tracker-api'
+    dir: 'dailyexpense'
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/expense-tracker-api', '.']
-    dir: 'expense-tracker-api'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/daily-expense-api', '.']
+    dir: 'dailyexpense'
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/expense-tracker-api']
+    args: ['push', 'gcr.io/$PROJECT_ID/daily-expense-api']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       - 'gcloud'
       - 'run'
       - 'deploy'
-      - 'expense-tracker-api'
+      - 'daily-expense-api'  # ✅ Unique service name
       - '--image'
-      - 'gcr.io/$PROJECT_ID/expense-tracker-api'
+      - 'gcr.io/$PROJECT_ID/daily-expense-api'
       - '--region'
       - 'us-central1'
       - '--platform'
