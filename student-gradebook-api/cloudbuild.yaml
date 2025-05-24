@@ -6,15 +6,18 @@ steps:
   - name: 'maven:3.9-eclipse-temurin-17'
     entrypoint: 'mvn'
     args: ['clean', 'package', '-DskipTests=false']
+    dir: 'student-gradebook-api'  
 
   # Step 2: Run the tests
   - name: 'maven:3.9-eclipse-temurin-17'
     entrypoint: 'mvn'
     args: ['test']
+    dir: 'student-gradebook-api' 
 
   # Step 3: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/student-gradebook-api', '.']
+    dir: 'student-gradebook-api' 
 
   # Step 4: Push the image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
