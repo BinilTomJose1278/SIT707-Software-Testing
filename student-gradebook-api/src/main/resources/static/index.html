@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student GradeBook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 150px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .results-card {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            min-height: 200px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            margin: 0;
+        }
+
+        .badge {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .grade-item {
+            background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .grade-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .grade-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .student-id {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+
+        .subject {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .average-item {
+            background: linear-gradient(45deg, #fff5f5, #fed7d7);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .empty-state img {
+            width: 80px;
+            height: 80px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff40;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-wrapper {
+                min-width: auto;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Student GradeBook</h1>
+            <p>Manage student grades with style and efficiency</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2><span class="icon">+</span>Add New Grade</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input id="studentId" placeholder="Student ID (e.g., STU001)" />
+                        </div>
+                        <div class="input-wrapper">
+                            <input id="subject" placeholder="Subject (e.g., Mathematics)" />
+                        </div>
+                        <div class="input-wrapper">
+                            <input id="score" placeholder="Score (0-100)" type="number" min="0" max="100" />
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addGrade()">
+                        <span class="btn-text">Submit Grade</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📊</span>Grade Analytics</h2>
+                <div class="form-group">
+                    <button class="btn" onclick="getGrades()">
+                        <span class="btn-text">Show All Grades</span>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input id="avgStudentId" placeholder="Student ID for Average" />
+                        </div>
+                        <button class="btn" onclick="getAverage()">
+                            <span class="btn-text">Calculate Average</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-card">
+            <div class="results-header">
+                <h2><span class="icon">📋</span>Results</h2>
+                <div class="badge" id="resultsBadge" style="display: none;">0 items</div>
+            </div>
+            <div id="grades"></div>
+            <div id="average"></div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        const api = "/api/grades";
+        let isLoading = false;
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'success' 
+                ? 'linear-gradient(45deg, #48bb78, #38a169)' 
+                : 'linear-gradient(45deg, #f56565, #e53e3e)';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function setLoading(button, loading) {
+            const btnText = button.querySelector('.btn-text');
+            if (loading) {
+                btnText.innerHTML = '<span class="loading"></span> Processing...';
+                button.disabled = true;
+            } else {
+                btnText.textContent = button.dataset.originalText || btnText.textContent.replace(/.*Processing\.\.\./, '');
+                button.disabled = false;
+            }
+        }
+
+        function addGrade() {
+            const button = event.target;
+            const studentId = document.getElementById("studentId").value.trim();
+            const subject = document.getElementById("subject").value.trim();
+            const score = parseFloat(document.getElementById("score").value);
+
+            if (!studentId || !subject || isNaN(score) || score < 0 || score > 100) {
+                showNotification('Please fill all fields with valid data!', 'error');
+                return;
+            }
+
+            button.dataset.originalText = 'Submit Grade';
+            setLoading(button, true);
+
+            fetch(api, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    subject: subject,
+                    score: score
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showNotification(`Grade added successfully for ${studentId}!`);
+                document.getElementById("studentId").value = '';
+                document.getElementById("subject").value = '';
+                document.getElementById("score").value = '';
+                setLoading(button, false);
+            })
+            .catch(error => {
+                showNotification('Error adding grade. Please try again.', 'error');
+                setLoading(button, false);
+            });
+        }
+
+        function getGrades() {
+            const button = event.target;
+            button.dataset.originalText = 'Show All Grades';
+            setLoading(button, true);
+
+            fetch(api)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("grades").innerHTML = '';
+                    let html = '';
+                    if (data.length === 0) {
+                        html = '<div class="empty-state">📚 No grades found. Add some grades to get started!</div>';
+                        document.getElementById("grades").innerHTML = html;
+                    } else {
+                        data.forEach((g, index) => {
+                            setTimeout(() => {
+                                const gradeDiv = document.createElement('div');
+                                gradeDiv.className = 'grade-item';
+                                gradeDiv.innerHTML = `
+                                    <div class="grade-info">
+                                        <div class="student-id">Student: ${g.studentId}</div>
+                                        <div class="subject">${g.subject}</div>
+                                    </div>
+                                    <div class="score">${g.score}</div>
+                                `;
+                                document.getElementById("grades").appendChild(gradeDiv);
+                            }, index * 100);
+                        });
+                    }
+                    
+                    document.getElementById("average").innerHTML = '';
+                    document.getElementById("resultsBadge").style.display = 'block';
+                    document.getElementById("resultsBadge").textContent = `${data.length} grades`;
+                    
+                    setLoading(button, false);
+                    showNotification(`Loaded ${data.length} grades successfully!`);
+                })
+                .catch(error => {
+                    showNotification('Error loading grades. Please try again.', 'error');
+                    setLoading(button, false);
+                });
+        }
+
+        function getAverage() {
+            const button = event.target;
+            const id = document.getElementById("avgStudentId").value.trim();
+            
+            if (!id) {
+                showNotification('Please enter a Student ID!', 'error');
+                return;
+            }
+
+            button.dataset.originalText = 'Calculate Average';
+            setLoading(button, true);
+
+            fetch(`${api}/average/subjects/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("average").innerHTML = '';
+                    let html = `<div style="margin-bottom: 20px;"><strong style="font-size: 1.2rem; color: #4a5568;">📊 Average Scores for Student ${id}:</strong></div>`;
+                    
+                    if (Object.keys(data).length === 0) {
+                        html = '<div class="empty-state">📈 No grades found for this student.</div>';
+                        document.getElementById("average").innerHTML = html;
+                    } else {
+                        document.getElementById("average").innerHTML = html;
+                        Object.entries(data).forEach(([subject, average], index) => {
+                            setTimeout(() => {
+                                const avgDiv = document.createElement('div');
+                                avgDiv.className = 'average-item';
+                                avgDiv.innerHTML = `
+                                    <div style="font-weight: 600; color: #2d3748;">${subject}</div>
+                                    <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">${average.toFixed(1)}</div>
+                                `;
+                                document.getElementById("average").appendChild(avgDiv);
+                            }, index * 150);
+                        });
+                    }
+                    
+                    document.getElementById("grades").innerHTML = '';
+                    document.getElementById("resultsBadge").style.display = 'block';
+                    document.getElementById("resultsBadge").textContent = `${Object.keys(data).length} subjects`;
+                    
+                    setLoading(button, false);
+                    showNotification('Average calculated successfully!');
+                })
+                .catch(error => {
+                    showNotification('Error calculating average. Please try again.', 'error');
+                    setLoading(button, false);
+                });
+        }
+
+        // Clear results when clicking on inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    if (this.id === 'avgStudentId') {
+                        document.getElementById("grades").innerHTML = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

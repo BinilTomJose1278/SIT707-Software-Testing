@@ -1,0 +1,4 @@
+com\example\gradebook\model\Grade.class
+com\example\gradebook\GradeBookApplication.class
+com\example\gradebook\controller\GradeController.class
+com\example\gradebook\service\GradeService.class
